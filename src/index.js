@@ -68,34 +68,66 @@ function Header() {
 }
 
 function Menu() {
+  const menuSize = pizzaData.length;
+
+  let sentence = (
+    <p>
+      Authentic Italian Cuisine & creative dishes to choose from. All from our
+      stone oven . All organic,all delicious
+    </p>
+  );
   return (
     <main className="menu">
       <h2>Our Pizza Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+      {menuSize > 0 ? (
+        <>
+          {sentence}
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizza={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We are still working on our Menu. Please come back later</p>
+      )}
     </main>
   );
 }
-
+function Pizza({ pizza }) {
+  return (
+    <li className={`pizza ${pizza.soldOut ? "sold-out" : ""}`}>
+      <img src={pizza.photoName} alt={pizza.name} />
+      <div>
+        <h3>{pizza.name}</h3>
+        <p>{pizza.ingredients}</p>
+        <span>{pizza.soldOut ? "Sold Out" : pizza.price}</span>
+      </div>
+    </li>
+  );
+}
 function Footer() {
   const hour = new Date().getHours();
-  const openHour = 12;
-  const closingHour = 22;
+  const openHour = 9;
+  const closingHour = 21;
   const isOpen = hour >= openHour && hour <= closingHour;
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()} Hello! We are currently open{" "}
+      {isOpen ? (
+        <Order closingHour={closingHour} />
+      ) : (
+        <p>
+          We are happy to welcome you between {openHour}:00 and {closingHour}:00
+        </p>
+      )}
     </footer>
   );
 }
-
-function Pizza() {
+function Order(props) {
   return (
-    <div>
-      <img src={require("./pizzas/spinaci.jpg")} alt="Pizza Spinaci" />
-      <h3>Pizza Spinaci</h3>
-      <p>Tomato, mozarella, spinach, and ricotta cheese</p>
+    <div className="order">
+      <p>We're Open Until {props.closingHour}:00 . Come visit us and Order</p>
+      <button className="btn">Order Now</button>
     </div>
   );
 }
